@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzm.dao.BlogMapper">
+    <resultMap id="baseMap" type="com.zzm.entity.Blog">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <association property="userTest" javaType="com.zzm.entity.UserTest">
+            <result column="name" property="name"/>
+
+        </association>
+    </resultMap>
+
+    <resultMap id="company" type="com.zzm.entity.CompanyDto">
+        <id property="id" column="id"/>
+        <result property="companyName" column="companyName"/>
+        <association property="superior" resultMap="company" columnPrefix="superior_" />
+    </resultMap>
+    <select id="selectBlog" resultMap="baseMap">
+    select * from Blog where id = #{id}
+  </select>
+
+
+    <select id="selectCompanyDto" parameterType="long" resultMap="company">
+  select 1 as id, 'a' as companyName, 2 as superior_id , 'b' as superior_name from dual
+</select>
+
+    <select id="containsKey" resultType="java.lang.String" databaseId="mysql">
+         select 1 as id, 'a' as companyName, 2 as superior_id , 'b' as superior_name from t_user
+
+         where t_name = #{configKey}
+    </select>
+</mapper>
